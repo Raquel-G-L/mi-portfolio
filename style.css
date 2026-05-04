@@ -58,15 +58,18 @@ h2 {
 /* ===================
 Lista proyectos
 =================== */
-ul {
-  list-style: none;
+.card {
+  background: #fff;
+  padding: 15px;
+  margin: 10px 0;
+  border-radius: 10px;
+  border-left: 4px solid #a64dd4;
+  transition: 0.3s;
 }
 
-ul li {
-  padding: 8px;
-  background: #eee;
-  margin-bottom: 8px;
-  border-radius: 5px;
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
 }
 
 /* ===================
