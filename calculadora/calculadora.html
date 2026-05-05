@@ -15,6 +15,7 @@
                        PANTALLA
     ===============================================-->
     <div class="calculadora">
+        <div id="operacion"></div>
         <input type="text" name="" id="pantalla" disabled>
         <br><br>
 
@@ -32,19 +33,19 @@
             <button onclick="agregarNumero('8')">8</button>
             <button onclick="agregarNumero('9')">9</button>
             <button class="operador" onclick="seleccionarOperador('*')">*</button>
-           
+
 
             <button onclick="agregarNumero('4')">4</button>
             <button onclick="agregarNumero('5')">5</button>
             <button onclick="agregarNumero('6')">6</button>
             <button class="operador" onclick="seleccionarOperador('-')">-</button>
-            
+
 
             <button onclick="agregarNumero('1')">1</button>
             <button onclick="agregarNumero('2')">2</button>
             <button onclick="agregarNumero('3')">3</button>
             <button class="operador" onclick="seleccionarOperador('+')">+</button>
-            
+
 
             <button onclick="cambiarSigno()">+/-</button>
             <button onclick="agregarNumero('0')">0</button>
@@ -54,6 +55,7 @@
     </div>
 
     <script>
+        let operacion = document.getElementById("operacion");
         let pantalla = document.getElementById("pantalla");
 
         let numeroActual = "";
@@ -72,6 +74,13 @@
 
             numeroActual += numero;
             pantalla.value = numeroActual;
+
+            //=============================================
+            // ACTUALIZAR OPERACIÓN EN TIEMPO REAL
+            //=============================================
+            if (operador !== "") {
+                operacion.textContent = numeroAnterior + " " + operador + " " + numeroActual;
+            }
         }
 
         //=============================================
@@ -79,15 +88,13 @@
         //=============================================
         function seleccionarOperador(op) {
 
-            //======================================================
-            // SI HAY UNA OPERACION PENDIENTE, SE RESUELVE PRIMERO 
-            //======================================================
-            if (numeroAnterior !== "" && numeroActual !== "") {
-                calcular();
-            }
+            if (numeroActual === "") return;
 
             numeroAnterior = numeroActual;
             operador = op;
+
+            operacion.textContent = numeroAnterior + " " + operador;
+
             numeroActual = "";
         }
 
@@ -103,6 +110,8 @@
             let num1 = parseFloat(numeroAnterior);
             let num2 = parseFloat(numeroActual);
 
+            operacion.textContent = numeroAnterior + " " + operador + " " + numeroActual + " =";
+
             if (operador === "+") {
                 resultado = num1 + num2;
             } else if (operador === "-") {
@@ -113,6 +122,7 @@
 
                 if (num2 === 0) {
                     pantalla.value = "Error";
+                    operacion.textContent = "";
                     return;
                 }
 
@@ -167,6 +177,7 @@
             numeroAnterior = "";
             operador = "";
             pantalla.value = "";
+            operacion.textContent = "";
         }
 
         //=============================================
