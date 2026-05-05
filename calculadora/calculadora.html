@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora</title>
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+    <!--=============================================
+                       PANTALLA
+    ===============================================-->
+    <div class="calculadora">
+        <input type="text" name="" id="pantalla" disabled>
+        <br><br>
+
+        <!--=============================================
+                NUMEROS Y OPERADORES
+    ===============================================-->
+        <div class="botones">
+
+            <button class="limpiar" onclick="limpiar()">C</button>
+            <button onclick="porcentaje()">%</button>
+            <button onclick="borrarUltimo()">←</button>
+            <button class="operador" onclick="seleccionarOperador('/')">/</button>
+
+            <button onclick="agregarNumero('7')">7</button>
+            <button onclick="agregarNumero('8')">8</button>
+            <button onclick="agregarNumero('9')">9</button>
+            <button class="operador" onclick="seleccionarOperador('*')">*</button>
+           
+
+            <button onclick="agregarNumero('4')">4</button>
+            <button onclick="agregarNumero('5')">5</button>
+            <button onclick="agregarNumero('6')">6</button>
+            <button class="operador" onclick="seleccionarOperador('-')">-</button>
+            
+
+            <button onclick="agregarNumero('1')">1</button>
+            <button onclick="agregarNumero('2')">2</button>
+            <button onclick="agregarNumero('3')">3</button>
+            <button class="operador" onclick="seleccionarOperador('+')">+</button>
+            
+
+            <button onclick="cambiarSigno()">+/-</button>
+            <button onclick="agregarNumero('0')">0</button>
+            <button onclick="agregarNumero('.')">.</button>
+            <button class="igual" onclick="calcular()">=</button>
+        </div>
+    </div>
+
+    <script>
+        let pantalla = document.getElementById("pantalla");
+
+        let numeroActual = "";
+        let numeroAnterior = "";
+        let operador = "";
+
+        //=============================================
+        //              AÑADIR NUMEROS
+        //=============================================
+        function agregarNumero(numero) {
+            if (pantalla.value === "Error") {
+                limpiar();
+            }
+            //Evitar dos puntos decimales
+            if (numero === "." && numeroActual.includes(".")) return;
+
+            numeroActual += numero;
+            pantalla.value = numeroActual;
+        }
+
+        //=============================================
+        //          SELECCIONAR OPERADOR
+        //=============================================
+        function seleccionarOperador(op) {
+
+            //======================================================
+            // SI HAY UNA OPERACION PENDIENTE, SE RESUELVE PRIMERO 
+            //======================================================
+            if (numeroAnterior !== "" && numeroActual !== "") {
+                calcular();
+            }
+
+            numeroAnterior = numeroActual;
+            operador = op;
+            numeroActual = "";
+        }
+
+        //=============================================
+        //                  CALCULAR
+        //=============================================
+        function calcular() {
+
+            if (numeroAnterior === "" || numeroActual === "") return;
+
+            let resultado;
+
+            let num1 = parseFloat(numeroAnterior);
+            let num2 = parseFloat(numeroActual);
+
+            if (operador === "+") {
+                resultado = num1 + num2;
+            } else if (operador === "-") {
+                resultado = num1 - num2;
+            } else if (operador === "*") {
+                resultado = num1 * num2;
+            } else if (operador === "/") {
+
+                if (num2 === 0) {
+                    pantalla.value = "Error";
+                    return;
+                }
+
+                resultado = num1 / num2;
+            }
+
+            pantalla.value = resultado;
+
+            numeroActual = resultado.toString();
+            numeroAnterior = "";
+            operador = "";
+        }
+
+        //=============================================
+        //              CAMBIAR SIGNO
+        //=============================================
+        function cambiarSigno() {
+            if (numeroActual === "") return;
+
+            if (numeroActual.startsWith("-")) {
+                numeroActual = numeroActual.slice(1);
+            } else {
+                numeroActual = "-" + numeroActual;
+            }
+
+            pantalla.value = numeroActual;
+        }
+
+        //=============================================
+        //                  PORCENTAJE
+        //=============================================
+        function porcentaje() {
+            if (numeroActual === "") return;
+
+            numeroActual = (parseFloat(numeroActual) / 100).toString();
+            pantalla.value = numeroActual;
+        }
+
+        //=============================================
+        //          BORRAR EL ULTIMO NUMERO
+        //=============================================
+        function borrarUltimo() {
+            numeroActual = numeroActual.slice(0, -1);
+            pantalla.value = numeroActual;
+        }
+
+        //=============================================
+        //                 LIMPIAR TODO
+        //=============================================
+        function limpiar() {
+            numeroActual = "";
+            numeroAnterior = "";
+            operador = "";
+            pantalla.value = "";
+        }
+
+        //=============================================
+        //      PARA QUE FUNCIONE CON EL TECLADO
+        //=============================================
+        document.addEventListener("keydown", function (event) {
+
+            let tecla = event.key;
+
+            //=============================================
+            //              BACKSPACE PRIMERO 
+            // (y bloqueamos comportamiento navegador)
+            //=============================================
+            if (tecla === "Backspace") {
+                event.preventDefault();
+                borrarUltimo();
+            }
+
+            //=============================================
+            //                  NUMEROS
+            //=============================================
+            else if (tecla >= "0" && tecla <= "9") {
+                agregarNumero(tecla);
+            }
+
+            //=============================================
+            //                  OPERADORES
+            //=============================================
+            else if (tecla === "+" || tecla === "-" || tecla === "*" || tecla === "/") {
+                seleccionarOperador(tecla);
+            }
+
+            //=============================================
+            //                    ENTER
+            //=============================================
+            else if (tecla === "Enter") {
+                calcular();
+            }
+
+            //=============================================
+            //                   ESCAPE
+            //=============================================
+            else if (tecla === "Escape") {
+                limpiar();
+            }
+
+            //=============================================
+            //                   DECIMAL
+            //=============================================
+            else if (tecla === ".") {
+                agregarNumero(".");
+            }
+
+        });
+    </script>
+</body>
+
+</html>
