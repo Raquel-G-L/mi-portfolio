@@ -14,6 +14,18 @@ body {
     box-shadow: 0 10px 30px rgba(0,0,0,0.5);
 }
 
+#pantalla-container {
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+#operacion {
+    color: #aaa;
+    font-size: 1rem;
+    text-align: right;
+    min-height: 20px;
+}
+
 #pantalla {
     width: 100%;
     box-sizing: border-box;
